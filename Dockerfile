@@ -1,15 +1,14 @@
-FROM node:18-slim
+FROM alpine:latest
 
 # Xray core ကို install လုပ်ခြင်း
-RUN apt-get update && apt-get install -y curl unzip \
+RUN apk add --no-cache curl unzip \
     && curl -L -o /tmp/xray.zip https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip \
     && unzip /tmp/xray.zip -d /usr/local/bin \
     && chmod +x /usr/local/bin/xray
 
 WORKDIR /app
-COPY . .
 
-# Configuration file ထုတ်ပေးခြင်း
+# Configuration ကို config.json ဖိုင်အဖြစ် တိုက်ရိုက်ထုတ်ပေးခြင်း
 RUN printf '{\n\
     "inbounds": [{\n\
         "port": 8080,\n\
@@ -28,5 +27,5 @@ RUN printf '{\n\
 
 EXPOSE 8080
 
-# npm start ကတစ်ဆင့် process နှစ်ခုလုံးကို run ခိုင်းခြင်း
-CMD ["npm", "start"]
+# Xray ကို တိုက်ရိုက် run ခြင်း (npm start မလိုပါ)
+CMD ["/usr/local/bin/xray", "-config", "config.json"]
