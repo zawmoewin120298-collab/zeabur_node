@@ -1,7 +1,11 @@
 {
-  "name": "zeabur-vless",
+  "name": "vless-server",
   "version": "1.0.0",
+  "main": "index.js",
   "scripts": {
-    "start": "xray -config config.json"
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "ws": "^8.14.2"
   }
 }
