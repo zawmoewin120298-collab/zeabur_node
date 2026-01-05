@@ -8,7 +8,7 @@ RUN apk add --no-cache curl unzip \
 
 WORKDIR /app
 
-# config.json ကို တိုက်ရိုက်ထုတ်ပေးခြင်း
+# config.json ကို တိုက်ရိုက် generate လုပ်ခြင်း
 RUN printf '{\n\
     "inbounds": [{\n\
         "port": 8080,\n\
@@ -27,5 +27,5 @@ RUN printf '{\n\
 
 EXPOSE 8080
 
-# Xray ကို တိုက်ရိုက် run ပါမယ်
-CMD ["/usr/local/bin/xray", "-config", "config.json"]
+# Xray ကို တိုက်ရိုက် ခေါ်သုံးခြင်း
+CMD ["xray", "-config", "config.json"]
