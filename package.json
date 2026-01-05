@@ -2,6 +2,6 @@
   "name": "zeabur-vless",
   "version": "1.0.0",
   "scripts": {
-    "start": "echo 'Using Dockerfile instead'"
+    "start": "xray -config config.json"
   }
 }
