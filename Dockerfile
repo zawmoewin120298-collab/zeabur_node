@@ -1,6 +1,6 @@
 FROM node:18-slim
 
-# Xray install လုပ်ခြင်း
+# Xray core ကို install လုပ်ခြင်း
 RUN apt-get update && apt-get install -y curl unzip \
     && curl -L -o /tmp/xray.zip https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip \
     && unzip /tmp/xray.zip -d /usr/local/bin \
@@ -9,13 +9,13 @@ RUN apt-get update && apt-get install -y curl unzip \
 WORKDIR /app
 COPY . .
 
-# Configuration file ထုတ်ပေးခြင်း
+# Configuration ထုတ်ပေးတဲ့နေရာမှာ Port ကို hardcode မလုပ်ဘဲ variable သုံးပါမယ်
 RUN printf '{\n\
     "inbounds": [{\n\
-        "port": %s,\n\
+        "port": 8080,\n\
         "protocol": "vless",\n\
         "settings": {\n\
-            "clients": [{"id": "%s"}],\n\
+            "clients": [{"id": "550e8400-e29b-41d4-a716-446655440000"}],\n\
             "decryption": "none"\n\
         },\n\
         "streamSettings": {\n\
@@ -24,9 +24,40 @@ RUN printf '{\n\
         }\n\
     }],\n\
     "outbounds": [{"protocol": "freedom"}]\n\
-}' "${PORT:-8080}" "${UUID:-$(node -e 'console.log(require("crypto").randomUUID())')}" > config.json
+}' > config.json
 
 EXPOSE 8080
 
-# Node server နဲ့ Xray ကို တစ်ပြိုင်တည်း run ခြင်း
-CMD node index.js & xray -config config.json
+# Xray ကို background မှာ မဟုတ်ဘဲ တိုက်ရိုက် run ပါမယ်
+CMD xray -config config.jsonFROM node:18-slim
+
+# Xray core ကို install လုပ်ခြင်း
+RUN apt-get update && apt-get install -y curl unzip \
+    && curl -L -o /tmp/xray.zip https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip \
+    && unzip /tmp/xray.zip -d /usr/local/bin \
+    && chmod +x /usr/local/bin/xray
+
+WORKDIR /app
+COPY . .
+
+# Configuration ထုတ်ပေးတဲ့နေရာမှာ Port ကို hardcode မလုပ်ဘဲ variable သုံးပါမယ်
+RUN printf '{\n\
+    "inbounds": [{\n\
+        "port": 8080,\n\
+        "protocol": "vless",\n\
+        "settings": {\n\
+            "clients": [{"id": "550e8400-e29b-41d4-a716-446655440000"}],\n\
+            "decryption": "none"\n\
+        },\n\
+        "streamSettings": {\n\
+            "network": "ws",\n\
+            "wsSettings": {"path": "/"}\n\
+        }\n\
+    }],\n\
+    "outbounds": [{"protocol": "freedom"}]\n\
+}' > config.json
+
+EXPOSE 8080
+
+# Xray ကို background မှာ မဟုတ်ဘဲ တိုက်ရိုက် run ပါမယ်
+CMD xray -config config.json
