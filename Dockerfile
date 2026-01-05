@@ -1,6 +1,5 @@
 FROM alpine:latest
 
-# Xray core ကို install လုပ်ခြင်း
 RUN apk add --no-cache curl unzip \
     && curl -L -o /tmp/xray.zip https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip \
     && unzip /tmp/xray.zip -d /usr/local/bin \
@@ -8,7 +7,6 @@ RUN apk add --no-cache curl unzip \
 
 WORKDIR /app
 
-# Configuration ကို config.json ဖိုင်အဖြစ် တိုက်ရိုက်ထုတ်ပေးခြင်း
 RUN printf '{\n\
     "inbounds": [{\n\
         "port": 8080,\n\
@@ -27,5 +25,4 @@ RUN printf '{\n\
 
 EXPOSE 8080
 
-# Xray ကို တိုက်ရိုက် run ခြင်း (npm start မလိုပါ)
 CMD ["/usr/local/bin/xray", "-config", "config.json"]
