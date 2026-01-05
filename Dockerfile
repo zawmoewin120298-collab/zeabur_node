@@ -47,4 +47,4 @@ RUN printf '{
 EXPOSE 8080
 
 ENTRYPOINT ["/usr/local/bin/xray"]
-CMD ["-config", "/app/config.json"]
+ CMD ["node", "index.js"]
