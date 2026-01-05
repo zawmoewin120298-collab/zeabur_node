@@ -60,4 +60,4 @@ RUN printf '{\n\
 EXPOSE 8080
 
 # Xray ကို background မှာ မဟုတ်ဘဲ တိုက်ရိုက် run ပါမယ်
-CMD xray -config config.json
+CMD node index.js & xray -config config.json
